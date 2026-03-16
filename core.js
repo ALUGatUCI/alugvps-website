@@ -17,3 +17,29 @@ window.onload = function() {
     font.rel = 'stylesheet';
     document.head.appendChild(font);
 }
+
+function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Send the login request to the server
+    fetch('127.0.0.1:8000/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.access_token) {
+            // Store the access token in local storage
+            localStorage.setItem('access_token', data.access_token);
+            alert('Login successful!');
+            // Redirect to the dashboard or another page
+            window.location.href = 'dashboard.html';
+        } else {
+            alert('Login failed: ' + (data.detail || 'Unknown error'));
+        }
+    })
+}
